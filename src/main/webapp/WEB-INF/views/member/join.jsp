@@ -78,8 +78,20 @@
       </div>
       <div class="form-group row">
         <label for="mbsp_email" class="col-2">이메일</label>
-        <div class="col-10">
+        <div class="col-8">
           <input type="email" class="form-control" id="mbsp_email" name="mbsp_email" placeholder="이메일 입력">
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-outline-info" id="mailAuth">메일 인증</button>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="mbsp_id" class="col-2">메일 인증</label>
+        <div class="col-8">
+          <input type="text" class="form-control" id="authcode" name="authcode" placeholder="인증번호 입력">
+        </div>
+        <div class="col-2">
+		  <button type="button" class="btn btn-outline-info" id="">인증 확인</button>
         </div>
       </div>
       <div class="form-group row">
@@ -236,7 +248,49 @@
 				$("#mbsp_id").focus();
 				return;
 			}
-		//아이디 중복체크
+			//아이디 중복체크
+			$.ajax({
+				url : '/member/idCheck',
+				type : 'get',
+				datatype : 'text',
+				data : {mbsp_id : $("#mbsp_id").val()}, //서버에 보낼 데이터
+				success : function(result){
+					if(result == "yes"){
+						alert("사용 가능한 아이디 입니다.");
+						useIDCheck = true;		
+					}else{
+						alert("사용 불가능한 아이디 입니다.");
+						useIDCheck = false;
+						$("#mbsp_id").val(""); //아이디 텍스트 박스 초기화 
+						$("#mbsp_id").focus();						
+					}
+				}
+			});
+		});
+
+		// 메일인증 요청
+		$("#mailAuth").click(function() {
+
+			//if($("메일입력텍스트박스태그"))
+			if($("#mbsp_email").val() == ""){
+				alert("이메일을 입력하세요.");
+				$("#mbsp_email").focus();
+				return;				
+			}
+
+			$.ajax({
+				url: '/email/authcode',
+				type : 'get',
+				datatype : 'text', //스프링에서 보내는 데이터의 타입 'success'
+				data : {receiverMail : $("#mbsp_email").val()},
+				success : function(result){
+					if(result == "success"){
+						alert("인증메일이 발송되었습니다. 확인 바랍니다.")
+					}else{
+						
+					}
+				} 
+			});
 		});
 	});
 	
