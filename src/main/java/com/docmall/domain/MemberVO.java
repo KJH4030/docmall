@@ -6,6 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/*
+ - 주요 사용되는 기능 
+ - 회원가입, 회원수정 폼, 회원수정기능
+ - db회원테이블에서 정보를 읽어올 때
+ */
+
 @Getter
 @Setter
 @ToString

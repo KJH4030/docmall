@@ -7,4 +7,29 @@
 	<select id="idCheck" parameterType="String" resultType="String">
 		SELECT mbsp_id FROM mbsp_tbl WHERE mbsp_id = #{mbsp_id}
 	</select>
+	
+	<insert id="join" parameterType="com.docmall.domain.MemberVO">
+		INSERT INTO mbsp_tbl(mbsp_id, mbsp_name, mbsp_email, mbsp_password, mbsp_zipcode, mbsp_addr, mbsp_deaddr, mbsp_phone)
+    	VALUES(#{mbsp_id},#{mbsp_name},#{mbsp_email},#{mbsp_password},#{mbsp_zipcode},#{mbsp_addr},#{mbsp_deaddr},#{mbsp_phone})
+	</insert>
+	
+	<select id="login" parameterType="String" resultType="com.docmall.domain.MemberVO">
+		SELECT 
+			mbsp_id, 
+			mbsp_name, 
+			mbsp_email, 
+			mbsp_password, 
+			mbsp_zipcode, 
+			mbsp_addr, 
+			mbsp_deaddr, 
+			mbsp_phone, 
+			mbsp_point, 
+			mbsp_lastlogin,
+			mbsp_datesub, 
+			mbsp_updatedate
+		FROM 
+			mbsp_tbl 
+		WHERE 
+			mbsp_id = #{mbsp_id}
+	</select>
 </mapper>

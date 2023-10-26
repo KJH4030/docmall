@@ -53,4 +53,28 @@ public class EmailController {
 	}
 	
 	
+	//인증번호 확인 = 세션형태로 저장한 정보를 이용 //L42:session.setAttribute("authCode", authCode);
+	//세션 작업을 하기 위해선 세션이 호출되는 메서드에 파라미터로 HttpSession 삽입 필수
+	@GetMapping("/confirmAuthcode")
+	public ResponseEntity<String> confirmAuthcode(String authCode, HttpSession session){
+		
+		ResponseEntity<String> entity = null;
+				
+		if(session.getAttribute("authCode") != null) {
+			
+			//인증일치 여부
+			if(authCode.equals(session.getAttribute("authCode"))) {
+				entity = new ResponseEntity<String>("success",HttpStatus.OK);
+			}else {
+				entity = new ResponseEntity<String>("fail",HttpStatus.OK);
+			}
+			
+		}else {
+			//세션이 소멸된 경우
+			entity = new ResponseEntity<String>("request",HttpStatus.OK);
+		}		
+		
+		return entity;
+	}
+	
 }
