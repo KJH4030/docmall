@@ -32,4 +32,39 @@
 		WHERE 
 			mbsp_id = #{mbsp_id}
 	</select>
+	
+	<!-- 회원 수정 -->
+	<update id="modify" parameterType="com.docmall.domain.MemberVO">
+		UPDATE 
+			mbsp_tbl
+	    SET 
+		    mbsp_email = #{mbsp_email}, 
+		    mbsp_zipcode = #{mbsp_zipcode}, 
+		    mbsp_addr = #{mbsp_addr}, 
+		    mbsp_deaddr = #{mbsp_deaddr}, 
+		    mbsp_phone = #{mbsp_phone},    
+		    mbsp_updatedate = sysdate
+		WHERE 
+			mbsp_id = #{mbsp_id}
+	</update>
+	
+	<!-- 최근 로그인 시간 갱신 -->
+	<update id="loginTimeUpdate" parameterType="String">
+		UPDATE
+			mbsp_tbl
+		SET
+			mbsp_lastlogin = sysdate
+		WHERE
+			mbsp_id = #{mbsp_id}
+	</update>
+	
+	<!-- 회원 탈퇴 -->
+	<delete id="delete" parameterType="String">
+		
+		DELETE FROM
+			mbsp_tbl
+		WHERE
+			mbsp_id = #{mbsp_id}
+		
+	</delete>
 </mapper>
