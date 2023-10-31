@@ -9,7 +9,7 @@
     <div>
       <b>${sessionScope.loginStatus.mbsp_id }님</b>
       <b>${sessionScope.loginStatus.mbsp_email }님</b>      
-      <%-- <b>${sessionScope.loginStatus.mbsp_lastlogin }</b> --%>
+      <b>${sessionScope.loginStatus.mbsp_lastlogin }</b>
     </div>
   </c:if>
   <nav class="my-2 my-md-0 mr-md-3">

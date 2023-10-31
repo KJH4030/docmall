@@ -44,8 +44,8 @@ public class MemberVO {
 	
 	private int point;
 	
-	private Date lastlogin;
-	private Date datesub;
-	private Date updatedate;
+	private Date mbsp_lastlogin;
+	private Date mbsp_datesub;
+	private Date mbsp_updatedate;
 	
 }
