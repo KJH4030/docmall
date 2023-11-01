@@ -18,4 +18,11 @@ public class AdminServiceImpl implements AdminService {
 		
 		return adminMapper.admin_ok(admin_id);
 	}
+
+	@Override
+	public void login_date(String admin_id) {
+		
+		adminMapper.login_date(admin_id);
+		
+	}
 }

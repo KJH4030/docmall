@@ -13,4 +13,12 @@
 			admin_id = #{admin_id}		
 	</select>
 	
+	<update id="login_date" parameterType="String">
+		UPDATE
+			admin_tbl
+		SET
+			admin_visit_date = sysdate
+		WHERE
+			admin_id = #{admin_id}
+	</update>
 </mapper>
