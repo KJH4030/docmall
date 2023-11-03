@@ -29,7 +29,27 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="com.docmall.controller" />
+		<!-- 파일 업로드 설정 -->
+	<!-- CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver() -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="defaultEncoding" value="UTF-8"/>
+		<!-- 1024 * 1024 * 100 byte = 100mb -->
+		<beans:property name="maxUploadSize" value="104857560"/>
+		<!-- 1024 * 1024 * 2 byte = 2mb -->
+		<beans:property name="maxUploadSizePerFile" value="2097152"/>
+		<!-- 업로드 시 서버의 임시폴더 경로 -->
+		<beans:property name="uploadTempDir" value="file:/C:/dev/devTools/upload/temp" />
+		<!-- 업로드 시 서버의 메모리 사용 크기 설정 -->
+		<beans:property name="maxInMemorySize" value="10485756" />		
+	</beans:bean>
 	
-	
+	<!--메인,썸네일 이미지 업로드폴더 경로 설정 String uploadPath = new String("C:\\dev\\upload\\product\\") -->
+	<beans:bean id="uploadPath" class="java.lang.String">
+		<beans:constructor-arg value="C:\\dev\\upload\\product\\"></beans:constructor-arg>
+	</beans:bean>
+	<!-- CKEditor 파일 업로드 경로 -->
+	<beans:bean id="uploadCKPath" class="java.lang.String">
+		<beans:constructor-arg value="C:\\dev\\upload\\ckeditor\\"></beans:constructor-arg>
+	</beans:bean>
 	
 </beans:beans>

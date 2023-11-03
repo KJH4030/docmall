@@ -1,4 +1,4 @@
-package com.docmall.controller;
+package com.docmall.util;
 
 import javax.servlet.http.HttpSession;
 
