@@ -10,11 +10,13 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.docmall.domain.ProductVO;
@@ -143,6 +145,10 @@ public class AdProductController {
 	@GetMapping("/pro_list")
 	public void pro_list(Criteria cri, Model model) throws Exception{
 		
+		//this(1,10);
+		// 10->2 페이지당 글 표시 갯수
+		cri.setAmount(2);
+		
 		List<ProductVO> pro_list = adProductService.pro_list(cri);
 		
 		//날짜 폴더의 역슬래시를 슬래시로 바꾸는 작업. 역슬래시로 되어있는 정보가 스프링으로 보내는 요청데이터에 사용되면 에러발생
@@ -152,7 +158,14 @@ public class AdProductController {
 		model.addAttribute("pro_list", pro_list);
 		
 		int totalCount = adProductService.getTotalCount(cri);
-		model.addAttribute("pageMaker", new PageDTO(cri,totalCount));
-				
+		model.addAttribute("pageMaker", new PageDTO(cri,totalCount));				
+	}
+	
+	//상품 리스트에서 보여줄 이미지. <img src="매핑주소"> 리턴받는것들은 반드시 @ResponseBody
+	@ResponseBody
+	@GetMapping("/imageDisplay") // /admin/product/imageDisplay 가 <img src="매핑주소">에 삽입
+	public ResponseEntity<byte[]> imageDisplay(String dateFolderName, String fileName) throws Exception{
+		
+		return FileUtils.getFile(uploadPath + dateFolderName,fileName);
 	}
 }
