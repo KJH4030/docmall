@@ -22,7 +22,12 @@ public interface AdProductService {
 	//방법2
 	void pro_checked_modify2(List<Integer> pro_num_arr, List<Integer> pro_price_arr, List<String> pro_buy_arr);
 	
+	//상품수정 페이지 이동
 	ProductVO pro_edit(Integer pro_num);
+
+	//상품 수정 기능
+	void pro_edit(ProductVO vo);
 	
-	CategoryVO get(Integer cg_code);
+	//상품 삭제 기능
+	void pro_delete(Integer pro_num);
 }

@@ -64,6 +64,12 @@ desired effect
     			<div class="box box-primary">
 					<div class="box-header with-border">
 						<h3 class="box-title mt-5">Product Edit</h3>
+						<form id="actionForm" action="" method="get">
+							<input type="hidden" name="pageNum" id="pageNum" value="${cri.pageNum}" />
+							<input type="hidden" name="amount"  id="amount" value="${cri.amount}" />
+							<input type="hidden" name="type" id="type" value="${cri.type}" />
+							<input type="hidden" name="keyword" id="keyword" value="${cri.keyword}" />
+						</form>
 					</div>
 					<!-- 절대경로 /board/register -->
 					<!-- <input type="file" 파일 업로드 시 enctype 필수 -->
@@ -78,10 +84,15 @@ desired effect
 							      	<option value="${categoryVO.cg_code }" ${categoryVO.cg_code == first_category.cg_parent_code ? 'selected' : '' }>${categoryVO.cg_name }</option>
 							      </c:forEach>							      
 							    </select>
+							    
+							<input type="hidden" name="pro_num" id="pro_num" value="${productVO.pro_num }"/>
 							</div>
 							<div class="col-sm-3">
 							    <select class="form-control" id="secondCategory" name="cg_code">
 							      <option>2차 카테고리 선택</option>
+							      <c:forEach items="${second_categoryList }" var="categoryVO">
+							      	<option value="${categoryVO.cg_code }" ${categoryVO.cg_code == productVO.cg_code ? 'selected' : '' }>${categoryVO.cg_name }</option>
+							      </c:forEach>
 							    </select>
 							</div>
 							
@@ -111,10 +122,13 @@ desired effect
 							<label for="title" class="col-sm-2">상품 이미지</label>
 							<div class="col-sm-4">
 							    <input type="file" class="form-control" name="uploadFile" id="uploadFile" >
+							    <!-- 상품이미지 변경 시 기존이미지 삭제를 위하여 사용 -->
+							    <input type="hidden" name="pro_img" value="${productVO.pro_img }">
+							    <input type="hidden" name="pro_up_folder" value="${productVO.pro_up_folder }">
 							</div>
 							<label for="title" class="col-sm-2">미리보기 이미지</label>
 							<div class="col-sm-4">
-								<img id="img_preview" style="width:200px; height:200px;" >
+								<img id="img_preview" style="width:200px; height:200px;" src="/admin/product/imageDisplay?dateFolderName=${productVO.pro_up_folder}&fileName=${productVO.pro_img}">
 							</div>							
 						</div>
 						<div class="form-group row">
@@ -143,7 +157,7 @@ desired effect
 								<ul class="uploadedList"></ul>
 							</div>
 							<div class="text-center">
-								<button type="submit" class="btn btn-primary">상품등록</button>
+								<button type="submit" class="btn btn-primary">상품수정</button>
 								<button type="reset" class="btn btn-primary">취소</button>
 							</div>
 						</div>
