@@ -78,10 +78,10 @@ desired effect
 						<div class="form-group row">
 							<label for="title" class="col-sm-2">카테고리</label>
 							<div class="col-sm-3">							
-								<input type="hidden" name="pageNum" id="pageNum" value="${pageMaker.cri.pageNum}" />
-								<input type="hidden" name="amount"  id="amount" value="${pageMaker.cri.amount}" />
-								<input type="hidden" name="type" id="type" value="${pageMaker.cri.type}" />
-								<input type="hidden" name="keyword" id="keyword" value="${pageMaker.cri.keyword}" />
+								<input type="hidden" name="pageNum" id="pageNum" value="${cri.pageNum}" />
+								<input type="hidden" name="amount"  id="amount" value="${cri.amount}" />
+								<input type="hidden" name="type" id="type" value="${cri.type}" />
+								<input type="hidden" name="keyword" id="keyword" value="${cri.keyword}" />
 							    <select class="form-control" id="firstCategory" name="firstCategory">
 							      <option>1차 카테고리 선택</option>
 							      <c:forEach items="${firstCategoryList }" var="categoryVO">

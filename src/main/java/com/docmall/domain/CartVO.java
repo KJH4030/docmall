@@ -1,5 +1,8 @@
 package com.docmall.domain;
 
+import lombok.Data;
+
+@Data
 public class CartVO {
 
 	private Long cart_code;
