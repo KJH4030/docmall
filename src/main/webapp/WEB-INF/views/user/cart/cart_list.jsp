@@ -78,19 +78,28 @@
 				<td><input type="number" value="${cartListDTO.cart_amount }" name="cart_amount" style="width:40px;"> <button type="button" class="btn btn-info" name="btn_cart_amount_change" style="width:4em; height:2.5em; text-align:center;">변경</button></td>
 				<td><span id="unitDiscount">${cartListDTO.pro_discount }</span>%</td>
 				<td><span class="unitTotalPrice" id="unitTotalPrice">${(cartListDTO.pro_price - ( cartListDTO.pro_price * (cartListDTO.pro_discount * 1/100))) * cartListDTO.cart_amount }</span></td>
-				<td><button class="btn btn-danger btn_pro_del" value="삭제">삭제</button></td>
+				<td><button class="btn btn-danger" name="btn_cart_del" value="삭제">삭제(ajax)</button></td>
+				<td><button class="btn btn-danger" name="btn_cart_del2" value="삭제">삭제(non_ajax)</button></td>
 			</tr>
 		</c:forEach>
 		</tbody>
 		<tfoot>
 			<tr>
-				<td colspan="8"><button type="button" class="btn btn-danger">선택 삭제</button></td>
+				<td colspan="12"><button type="button" name="btn_cart_del" id="btn_cart_del" class="btn btn-danger">선택 삭제</button></td>
 					
 			
 			</tr>
 			<tr>
-				<td colspan="8" style="text-align: right;">
-					최종결제금액 : <span id="cart_total_price">${cart_total_price }</span>
+				<td colspan="12" style="text-align: right;">
+					최종결제금액 : <span id="cart_total_price"><fmt:formatNumber type="currency" pattern="₩#,###원" value="${cart_total_price }">                		
+                	</fmt:formatNumber></span>
+				</td>			
+			</tr>
+			<tr>
+				<td colspan="12" style="text-align: center;">
+					<button class="btn btn-primary" id="btn_product">쇼핑 계속하기</button>
+					<button class="btn btn-primary" id="btn_cart_empty">장바구니 비우기</button>
+					<button class="btn btn-primary" id="btn_order">주문하기</button>
 				</td>			
 			</tr>
 		</tfoot>
@@ -109,7 +118,7 @@
 		//장바구니 목록에서 변경 클릭 시
 		$("button[name='btn_cart_amount_change']").on("click", function(){
 
-			let cur_btn_change = $(this);
+			let cur_btn_change = $(this); //현재 선택된 버튼태그의 위치를 참조
 			
 			let cart_amount = $(this).parent().find("input[name='cart_amount']").val();
 			//console.log(cart_amount);
@@ -140,11 +149,7 @@
 						
 			
 						//전체 주문 금액
-						let sumPrice = 0;
-						$(".unitTotalPrice").each(function(){
-							sumPrice += Number($(this).text());
-						});
-						$("#cart_total_price").text(sumPrice);
+						fn_cart_sum_price();
 						
 					}
 				}
@@ -152,10 +157,69 @@
 				
 			});
 		});
-		
-	});
+
+		//장바구니 삭제(ajax 사용)
+		$("button[name='btn_cart_del']").on("click", function(){
+
+			if(!confirm("장바구니 상품을 삭제하시겠습니까?")) return;
+			
+			let cur_btn_delete = $(this); //현재 선택된 버튼태그의 위치를 참조. ajax사용 시 this인식이 안되기 떄문에 미리 담아둔다
+			let cart_code = $(this).parent().parent().find("input[name='cart_code']").val();
+			//console.log("장바구니 코드 : "+ cart_code);
+
+			$.ajax({
+
+				url: '/user/cart/cart_list_del',
+				type: 'post',
+				data: {cart_code : cart_code},
+				dataType: 'text',
+				success: function(result){
+					if(result == "success"){
+						alert("삭제 되었습니다.")
+	
+						cur_btn_delete.parent().parent().remove(); //삭제된 장바구니 데이터행 제거
+
+						//전체주문금액
+						fn_cart_sum_price();
+					}
+				}
+
+			});
+
+		});
+
+		//장바구니 삭제 (non_ajax)
+		$("button[name='btn_cart_del2']").on("click", function(){
+			if(!confirm("장바구니 상품을 삭제하시겠습니까?")) return;
+			
+			let cart_code = $(this).parent().parent().find("input[name='cart_code']").val();
+
+			location.href = "/user/cart/cart_list_del?cart_code=" + cart_code; //get방식
+
+			fn_cart_sum_price();
+
+		});
+
+		//주문정보 페이지
+		$("button#btn_order").on("click", function(){
+
+			location.href="/user/order/order_info";
+			
+		});
+			
+	}); // jquery ready end
+
+	function fn_cart_sum_price(){
 
 
+		//전체 주문 금액
+		let sumPrice = 0;
+		$(".unitTotalPrice").each(function(){
+			sumPrice += Number($(this).text());
+		});
+		$("#cart_total_price").text(sumPrice);
+
+	}
 	
 	</script>
     

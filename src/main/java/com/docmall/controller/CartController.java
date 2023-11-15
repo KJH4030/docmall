@@ -91,6 +91,7 @@ public class CartController {
 	}
 	
 	//장바구니 수량 변경
+	@ResponseBody
 	@PostMapping("/cart_amount_change")
 	public ResponseEntity<String> cart_amount_change(Long cart_code, int cart_amount) throws Exception{
 		
@@ -100,6 +101,28 @@ public class CartController {
 		entity = new ResponseEntity<String>("success", HttpStatus.OK);
 		
 		return entity;
+	}
+	
+	//장바구니 목록 개별 삭제
+	@ResponseBody
+	@PostMapping("/cart_list_del")
+	public ResponseEntity<String> cart_list_del(Long cart_code) throws Exception{
+		
+		ResponseEntity<String> entity = null;
+		
+		cartService.cart_list_del(cart_code);
+		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		
+		return entity;
+	}
+	
+	//장바구니 목록 개별 삭제(non_ajax)
+	@GetMapping("/cart_list_del")
+	public String cart_list_del2(Long cart_code) throws Exception{
+				
+		cartService.cart_list_del(cart_code);
+		
+		return "redirect:/user/cart/cart_list";
 	}
 	
 }

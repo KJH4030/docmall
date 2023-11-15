@@ -26,7 +26,7 @@
 	    <a class="p-2 text-dark" href="/member/confirmPw">modify</a>    
     </c:if>
     <a class="p-2 text-dark" href="/member/mypage">MyPage</a>
-    <a class="p-2 text-dark" href="#">Order</a>
+    <a class="p-2 text-dark" href="/user/order/order_info">Order</a>
     <a class="p-2 text-dark" href="/user/cart/cart_list">Cart</a>
     <a class="p-2 text-dark" href="/admin/intro">[Admin]</a>
     
