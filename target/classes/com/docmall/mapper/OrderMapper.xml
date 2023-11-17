@@ -4,4 +4,70 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.docmall.mapper.OrderMapper">
 
+	<select id="getOderSeq" resultType="int">
+		
+		SELECT seq_ord_code.NEXTVAL FROM DUAL
+		
+	</select>
+	
+	<!-- 주문테이블 저장 -->
+	<insert id="order_insert" parameterType="com.docmall.domain.OrderVO">
+	
+		INSERT INTO 
+			order_tbl(
+				ord_code, 
+				mbsp_id, 
+				ord_name, 
+				ord_zipcode, 
+				ord_addr_basic, 
+				ord_addr_detail, 
+				ord_tel, 
+				ord_price, 
+				ord_regdate, 
+				ord_status, 
+				payment_status
+			)
+		VALUES(
+			#{ord_code},
+			#{mbsp_id},
+			#{ord_name},
+			#{ord_zipcode},
+			#{ord_addr_basic},
+			#{ord_addr_detail},
+			#{ord_tel},
+			#{ord_price},
+			sysdate,
+			#{ord_status},
+			#{payment_status}
+		)
+				
+	
+	</insert>
+	
+	<!-- 주문 상세 테이블 저장 -->
+	<insert id="order_detail_insert" parameterType="map">
+		
+		INSERT INTO
+		    ordetail_tbl(ord_code, pro_num, dt_amount, dt_price)
+		SELECT 
+		    #{ord_code}, c.pro_num, c.cart_amount, p.pro_price
+		FROM 
+		    cart_tbl C 
+		        INNER JOIN product_tbl P
+		        ON C.pro_num = P.pro_num
+		WHERE 
+		    mbsp_id = #{mbsp_id}
+		
+	</insert>
+	
+	<!-- 장바구니 비우기 -->
+	<delete id="cart_del" parameterType="String">
+	
+		DELETE FROM
+			cart_tbl
+		WHERE
+			mbsp_id = #{mbsp_id}
+	
+	</delete>
+	
 </mapper>

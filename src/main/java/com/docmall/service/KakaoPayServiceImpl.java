@@ -48,7 +48,7 @@ public class KakaoPayServiceImpl {
 	 * Content-type: application/x-www-form-urlencoded;charset=utf-8
 	 */
 	
-	ReadyResponse payReady(Long odr_code, String itemName, int quantity, String mbsp_id, int totalAmount) {
+	public ReadyResponse payReady(Long odr_code, String itemName, int quantity, String mbsp_id, int totalAmount) {
 		
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<String, String>();
 		

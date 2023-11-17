@@ -59,160 +59,11 @@
 	</div>
 
 	<div class="container">
-		<table class="table table-striped">
-			<thead>
-				<tr>
-
-					<th scope="col">상품</th>
-					<th scope="col">상품명</th>
-					<th scope="col">판매가</th>
-					<th scope="col">수량</th>
-					<th scope="col">할인</th>
-					<th scope="col">합계</th>
-
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach items="${order_info }" var="cartListDTO" varStatus="status">
-					<tr>
-						<td><img width="70" height="50"
-							src="/user/cart/imageDisplay?dateFolderName=${cartListDTO.pro_up_folder }&fileName=${cartListDTO.pro_img}"></td>
-						<td>${cartListDTO.pro_name }</td>
-						<td><span id="unitPrice">${cartListDTO.pro_price }</span></td>
-						<td>${cartListDTO.cart_amount }</td>
-						<td><span id="unitDiscount">${cartListDTO.pro_discount }</span>%</td>
-						<td><span class="unitTotalPrice" id="unitTotalPrice">${(cartListDTO.pro_price - ( cartListDTO.pro_price * (cartListDTO.pro_discount * 1/100))) * cartListDTO.cart_amount }</span></td>
-					</tr>
-				</c:forEach>
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan="12" style="text-align: right;"> 상품 총 <span id="cart_price_count">${fn:length(order_info)-1 }</span>
-					주문금액 : 
-					<span id="cart_total_price">
-					<%-- <fmt:formatNumber type="currency" pattern="₩#,###원" value="${order_price }"></fmt:formatNumber>		 --%>
-					${order_price }			
-					</span>
-					</td>
-				</tr>
-			</tfoot>
-		</table>
+		
 		
 		<div class="box box-primary">
 			<div class="box-body">
-				<form role="form" id="" method="post" action="">
-					<fieldset class="form-group border p-3">
-						<legend class="w-auto px-2">주문하시는 분</legend>
-							<div class="form-group row">
-								<label for="mbsp_id" class="col-2">주문자</label>
-								<div class="col-10">
-									<input type="text" class="form-control" id="b_mbsp_id" value="${loginStatus.mbsp_id }" readonly>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="mbsp_name" class="col-2">이름</label>
-								<div class="col-10">
-									<input type="text" class="form-control" id="b_mbsp_name" value="${loginStatus.mbsp_name }" readonly>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="mbsp_email" class="col-2">이메일</label>
-								<div class="col-10">
-									<input type="email" class="form-control" id="b_mbsp_email" value="${loginStatus.mbsp_email }" readonly>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="sample2_postcode" class="col-2">우편번호</label>
-								<div class="col-10">
-									<input type="text" class="form-control" id="b_mbsp_zipcode" value="${loginStatus.mbsp_zipcode }" readonly>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="sample2_address" class="col-2">기본주소</label>
-								<div class="col-10">
-									<input type="text" class="form-control" id="b_mbsp_addr" value="${loginStatus.mbsp_addr }" readonly>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="sample2_detailAddress" class="col-2">상세주소</label>
-								<div class="col-10">
-									<input type="text" class="form-control" id="b_mbsp_deaddr" value="${loginStatus.mbsp_deaddr }" readonly>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="mbsp_phone" class="col-2">전화번호</label>
-								<div class="col-10">
-									<input type="text" class="form-control" id="b_mbsp_phone" value="${loginStatus.mbsp_phone }" readonly>
-								</div>
-							</div>
-
-					</fieldset>
-					<hr>
-					<fieldset>
-						<legend>받으시는 분</legend>
-						<div class="box-body">
-							<div class="form-group row">
-								<label for="mbsp_name" class="col-2">수령인</label>
-								<div class="col-8">
-									<input type="text" class="form-control" id="mbsp_name"
-										name="mbsp_name" placeholder="아이디 입력">
-								</div>
-								<div class="col-2">
-									<input type="checkbox" id="same">수령인과 동일
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="sample2_postcode" class="col-2">우편번호</label>
-								<div class="col-8">
-									<input type="text" class="form-control" id="sample2_postcode"
-										name="mbsp_zipcode" placeholder="우편번호 입력">
-								</div>
-								<div class="col-2">
-									<button type="button" onclick="sample2_execDaumPostcode()"
-										class="btn btn-outline-info">우편번호 찾기</button>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="sample2_address" class="col-2">기본주소</label>
-								<div class="col-10">
-									<input type="text" class="form-control" id="sample2_address"
-										name="mbsp_addr" placeholder="주소 입력">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="sample2_detailAddress" class="col-2">상세주소</label>
-								<div class="col-10">
-									<input type="text" class="form-control"
-										id="sample2_detailAddress" name="mbsp_deaddr"
-										placeholder="상세주소 입력"> <input type="hidden"
-										id="sample2_extraAddress" placeholder="참고항목">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="mbsp_phone" class="col-2">전화번호</label>
-								<div class="col-10">
-									<input type="text" class="form-control" id="mbsp_phone"
-										name="mbsp_phone" placeholder="전화번호 입력">
-								</div>
-							</div>
-						</div>
-					</fieldset>		
-					<fieldset class="form-group border p-3">
-						<legend class="w-auto px-2">결제방법 선택</legend>
-						<div class="form-group row text-center">
-							<label for="mbsp_phone" class="col-2">결제방법</label>
-								<div class="col-10 text-left">
-									<input type="radio" id="paymethod1" name="paymethod" value="nobank">무통장 입금  
-									<input type="radio" id="paymethod2" name="paymethod" value="kakaopay"><img alt="" src="/image/payment.png"><br>
-								</div>
-						</div>						
-					</fieldset>
-					<div class="form-group row text-center">
-						<div class="col-12">
-							<button type="button" class="btn btn-primary" id="btn_order">주문 및 결제하기</button>
-						</div>
-					</div>
-				</form>
+				<h3>카카오 결제 및 주문처리가 되었습니다.</h3>
 			</div>
 		</div>
 		<%@include file="/WEB-INF/views/comm/footer.jsp"%>
@@ -366,7 +217,7 @@
 			data:{
 				paymethod : $("input[name='paymethod']:checked").val(),
 				ord_name: $("#mbsp_name").val(),
-				ord_zipcode: $("input[name='mbsp_zipcode']").val(),
+				ord_zipcode: $("input[name='mbsp_zipcode']").val() ,
 				ord_addr_basic: $("input[name='mbsp_addr']").val(),
 				ord_addr_detail: $("input[name='mbsp_deaddr']").val(),
 				ord_tel: $("#mbsp_phone").val(),
