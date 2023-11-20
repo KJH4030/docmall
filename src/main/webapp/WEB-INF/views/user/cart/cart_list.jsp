@@ -63,7 +63,7 @@
 				<th scope="col">상품명</th>
 				<th scope="col">판매가</th>
 				<th scope="col">수량</th>
-				<th scope="col">할인</th>
+				<!-- <th scope="col">할인</th> -->
 				<th scope="col">합계</th>
 				<th scope="col">비고</th>
 			</tr>
@@ -76,8 +76,8 @@
 				<td>${cartListDTO.pro_name }</td>
 				<td><span id="unitPrice">${cartListDTO.pro_price }</span></td>
 				<td><input type="number" value="${cartListDTO.cart_amount }" name="cart_amount" style="width:40px;"> <button type="button" class="btn btn-info" name="btn_cart_amount_change" style="width:4em; height:2.5em; text-align:center;">변경</button></td>
-				<td><span id="unitDiscount">${cartListDTO.pro_discount }</span>%</td>
-				<td><span class="unitTotalPrice" id="unitTotalPrice">${(cartListDTO.pro_price - ( cartListDTO.pro_price * (cartListDTO.pro_discount * 1/100))) * cartListDTO.cart_amount }</span></td>
+				<%-- <td><span id="unitDiscount">${cartListDTO.pro_discount }</span>%</td> --%>
+				<td><span class="unitTotalPrice" id="unitTotalPrice">${(cartListDTO.pro_price * cartListDTO.cart_amount) }</span></td>
 				<td><button class="btn btn-danger" name="btn_cart_del" value="삭제">삭제(ajax)</button></td>
 				<td><button class="btn btn-danger" name="btn_cart_del2" value="삭제">삭제(non_ajax)</button></td>
 			</tr>
@@ -138,12 +138,12 @@
 						//합계금액 계산작업
 						// 금액 = (판매가 - (판매가 * 할인율)) * 수량
 						let unitPrice = cur_btn_change.parent().parent().find("span#unitPrice").text();
-						let unitDiscount = cur_btn_change.parent().parent().find("span#unitDiscount").text();
+						/* let unitDiscount = cur_btn_change.parent().parent().find("span#unitDiscount").text(); */
 
 						//장바구니 코드별 단위 금액
 						let unitTotalPrice = cur_btn_change.parent().parent().find("span#unitTotalPrice");
 						console.log(unitTotalPrice);	
-						unitTotalPrice.text((unitPrice - (unitPrice * (unitDiscount * 1/100))) * cart_amount);						
+						unitTotalPrice.text(unitPrice * cart_amount);						
 						
 						console.log(unitTotalPrice);	
 						

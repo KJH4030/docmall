@@ -58,7 +58,7 @@ public class CartController {
 		
 		List<CartListDTO> cart_list = cartService.cart_list(mbsp_id);
 		
-		double cart_total_price = 0;
+		int cart_total_price = 0;
 		/*
 		 * //날짜 폴더의 역슬래시를 슬래시로 바꾸는 작업. 역슬래시로 되어있는 정보가 스프링으로 보내는 요청데이터에 사용되면 에러발생
 		 * cart_list.forEach(vo -> {
@@ -71,7 +71,7 @@ public class CartController {
 			CartListDTO vo = cart_list.get(i);
 			
 			vo.setPro_up_folder(vo.getPro_up_folder().replace("\\", "/"));
-			cart_total_price += ((double)vo.getPro_price() - (vo.getPro_price() * (vo.getPro_discount() * 1/100))) * (double)vo.getCart_amount();
+			cart_total_price += (vo.getPro_price() * vo.getCart_amount());
 			
 		}
 		
