@@ -62,10 +62,10 @@
   	<c:forEach items="${pro_list }" var="productVO">
   	<div class="col-md-3">
           <div class="card mb-3 shadow-sm">
-            <img width="100%" height="225" src="/user/product/imageDisplay?dateFolderName=${productVO.pro_up_folder }&fileName=${productVO.pro_img}">
+            <img style="cursor:pointer;" class="btn_pro_image" data-pro_num="${productVO.pro_num }" width="100%" height="225" src="/user/product/imageDisplay?dateFolderName=${productVO.pro_up_folder }&fileName=${productVO.pro_img}">
 
             <div class="card-body">
-              <p class="card-text">${productVO.pro_name }</p>
+              <p class="card-text btn_pro_image" style="cursor:pointer;" >${productVO.pro_name }</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <button type="button" name="btn_cart_add" data-pro_num="${productVO.pro_num }" class="btn btn-sm btn-outline-secondary">Cart</button>
@@ -95,7 +95,9 @@
 									<input type="hidden" name="amount"  id="amount" value="${pageMaker.cri.amount}" />
 									<input type="hidden" name="type" id="type" value="${pageMaker.cri.type}" />
 									<input type="hidden" name="keyword" id="keyword" value="${pageMaker.cri.keyword}" />
-									<input type="hidden" name="pro_num" id="pro_num" />
+									<!-- <input type="hidden" name="pro_num" id="pro_num" /> -->
+									<input type="hidden" name="cg_code" id="cg_code" value="${cg.code }" />
+									<input type="hidden" name="cg_name" id="cg_name" value="${cg.name }" />
 								</form>														
 								<nav aria-label="...">
 								<ul class="pagination">
@@ -173,6 +175,19 @@
 					}					
 				}
 			});			
+		});
+
+		$(".btn_pro_image").on("click", function(){
+			console.log("상품상세설명");
+
+			actionForm.attr("action", "/user/product/pro_detail");
+
+			let pro_num = $(this).data("pro_num");
+
+			actionForm.find("input[name='pro_num']").remove();
+			// <input type="hidden" name='pro_num' value="상품코드">
+			actionForm.append("<input type='hidden' name='pro_num' value='" + pro_num + "'>");
+			actionForm.submit();
 		});
 	});
 

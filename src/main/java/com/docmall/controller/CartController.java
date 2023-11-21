@@ -37,6 +37,8 @@ public class CartController {
 	@PostMapping("/cart_add")
 	public ResponseEntity<String> cart_add(CartVO vo, HttpSession session) throws Exception{
 		
+		log.info("장바구니 : " + vo);
+		
 		ResponseEntity<String> entity = null;
 		
 		//ajax방식에서 상품코드, 수량 2개정보만 전송되어옴. (로그인한 사용자의 아이디정보 추가작업)

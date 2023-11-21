@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -68,4 +69,20 @@ public class UserProductController {
 		
 		return FileUtils.getFile(uploadPath + dateFolderName,fileName);
 	}
+	
+	//상품상세, 하단 상품후기 포함.
+	@GetMapping("/pro_detail")
+	public void pro_detail(Criteria cri, Integer pro_num, Integer cg_code, @ModelAttribute("cg_name") String cg_name, Model model) throws Exception {
+		
+		log.info("페이징정보 : " + cri);
+		log.info("상품코드 : " + pro_num);
+
+		//db연동작업
+		ProductVO productVO = userProductService.pro_detail(pro_num);
+		productVO.setPro_up_folder(productVO.getPro_up_folder().replace("\\", "/"));
+		
+		model.addAttribute("productVO", productVO);
+		
+	}
+	
 }
