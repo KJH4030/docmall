@@ -1,5 +1,7 @@
 package com.docmall.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.docmall.domain.MemberVO;
 import com.docmall.domain.ReviewVO;
+import com.docmall.dto.Criteria;
+import com.docmall.dto.PageDTO;
 import com.docmall.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
@@ -53,8 +57,35 @@ public class ReviewController {
 	@GetMapping("/list/{pro_num}/{page}")
 	public ResponseEntity<Map<String, Object>> list(@PathVariable("pro_num") Integer pro_num,@PathVariable("page") Integer page ) throws Exception{
 		
+		//리턴타입에 다른 구문
+		// - select문
+		//ResponseEntity<Map<String, Object>> : 1)상품후기 목록 데이터 List<ReviewVO> 2)페이징 데이터 PageDTO
+		//ResponseEntity<List<ReviewVO>> : 상품후기목록 데이터 - List<ReviewVO>
+		//ResponseEntity<PageDTO> : 페이징 데이터 - PageDTO
+		
+		// - insert, delete, update
+		//ResponseEntity<String>
 		
 		ResponseEntity<Map<String, Object>> entity = null;
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		//1)상품후기 데이터 목록 작업
+		Criteria cri = new Criteria();
+		//cri.setAmount(20);
+		cri.setPageNum(page);
+		
+		//db연동.
+		List<ReviewVO> list = reviewService.list(pro_num, cri);
+		
+		//2)페이징 데이터 작업
+		int listCount = reviewService.listCount(pro_num);
+		PageDTO pageMaker = new PageDTO(cri,listCount);
+		
+		map.put("list", list); // 상품후기목록 데이터 - List<ReviewVO>
+		map.put("pageMaker", pageMaker); // 페이징 데이터 - PageDTO
+		
+		// jackson-databind 라이브러리에 의하여 map -> json으로 변환되어 ajax 호출
+		entity = new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 		
 		return entity;
 	}

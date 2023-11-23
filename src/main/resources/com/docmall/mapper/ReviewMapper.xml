@@ -11,4 +11,35 @@
     		(seq_review_tbl.NEXTVAL , #{mbsp_id},#{pro_num},#{rew_content},#{rew_score} )
 	</insert>
 	
+	<select id="list" parameterType="map" resultType="com.docmall.domain.ReviewVO">
+	
+		<![CDATA[
+		select 
+    		rew_num,mbsp_id,pro_num,rew_content,rew_score,rew_regdate
+		from 
+		    (
+		    select /*+INDEX_DESC(review_tbl PK_REVIEW_TBL) */
+		        rownum rn, rew_num,mbsp_id,pro_num,rew_content,rew_score,rew_regdate
+		    from 
+		        review_tbl
+		    where
+		        pro_num = #{pro_num}
+		    AND	    	
+		    	rownum <= #{cri.pageNum} * #{cri.amount}
+		    )
+		where 
+		    rn > (#{cri.pageNum} -1) * #{cri.amount}
+		]]>
+		
+	</select>
+	
+	<select id="listCount" parameterType="Integer" resultType="int">
+		SELECT 
+			count(*) 
+		FROM 
+			review_tbl		
+		WHERE				
+			pro_num = #{pro_num}
+	</select>   
+	
 </mapper>
