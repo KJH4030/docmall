@@ -74,7 +74,7 @@ desired effect
 							<div class="col-sm-3">
 							    <select class="form-control" id="firstCategory" name="firstCategory">
 							      <option>1차 카테고리 선택</option>
-							      <c:forEach items="${firstCategoryList }" var="categoryVO">
+							      <c:forEach items="${firstCategoryList123 }" var="categoryVO">
 							      	<option value="${categoryVO.cg_code }">${categoryVO.cg_name }</option>
 							      </c:forEach>							      
 							    </select>

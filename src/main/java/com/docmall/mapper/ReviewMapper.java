@@ -11,7 +11,11 @@ public interface ReviewMapper {
 
 	void review_insert(ReviewVO vo);
 	
-	List<ReviewVO> list(@Param("pro_num") Integer pro_num, @Param("cri") Criteria cri); //Criteria 검색 기능은 사용하지 않음
+	void review_modify(ReviewVO vo);
+	
+	List<ReviewVO> list(@Param("pro_num") Integer pro_num, @Param("cri") Criteria cri); //검색필드 사용안함
 	
 	int listCount(Integer pro_num);
+	
+	void delete(Long rew_num);
 }

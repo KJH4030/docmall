@@ -18,21 +18,31 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public void review_insert(ReviewVO vo) {
-
+		// TODO Auto-generated method stub
 		reviewMapper.review_insert(vo);
-		
 	}
 
 	@Override
 	public List<ReviewVO> list(Integer pro_num, Criteria cri) {
-
+		// TODO Auto-generated method stub
 		return reviewMapper.list(pro_num, cri);
 	}
 
 	@Override
 	public int listCount(Integer pro_num) {
-		
+		// TODO Auto-generated method stub
 		return reviewMapper.listCount(pro_num);
 	}
-	
+
+	@Override
+	public void delete(Long rew_num) {
+		// TODO Auto-generated method stub
+		reviewMapper.delete(rew_num);
+	}
+
+	@Override
+	public void review_modify(ReviewVO vo) {
+
+		reviewMapper.review_modify(vo);		
+	}
 }

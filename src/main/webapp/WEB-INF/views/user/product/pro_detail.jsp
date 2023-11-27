@@ -28,15 +28,17 @@
       <th scope="col">리뷰내용</th>
       <th scope="col">별점</th>
       <th scope="col">날짜</th>
+	  <th scope="col">비고</th>
     </tr>
   </thead>
   <tbody>
 	{{#each .}}
     <tr>
-      <th scope="row">{{rew_num}}</th>
-      <td>{{rew_content}}</td>
-      <td>{{convertStar rew_score}}</td>
-      <td>{{convertDate rew_regdate}}</td>
+      <th scope="row" class="rew_num">{{rew_num}}</th>
+      <td class="rew_content">{{rew_content}}</td>
+      <td class="rew_score">{{convertStar rew_score}}</td>
+      <td class="rew_regdate">{{convertDate rew_regdate}}</td>
+	  <td>{{authControlView mbsp_id rew_num rew_score}}</td>
     </tr>
 	{{/each}}
   </tbody>
@@ -153,7 +155,10 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-12 text-right">
+					<div class="col-md-8 text-center" id="review_paging">
+						
+					</div>
+					<div class="col-md-4 text-right">
 						<button type="button" id="btn_review_write" class="btn btn-info" >상품후기작성</button>
 					</div>
 				</div>
@@ -247,6 +252,8 @@
 			$("#tot_price").text(tot_price);
 		});
 
+		
+
 
 		//구매하기 (주문)
 		$("button[name='btn_order']").on("click", function(){
@@ -258,37 +265,44 @@
 
 		//상품후기 작성
 		$("#btn_review_write").on("click", function(){
-
+			
+			$("#btn_review_modify").hide();
+			$("#btn_review_save").show();
 			$('#review_modal').modal('show');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 
 		});
 		
 		//별저 클릭 시, 별점 태그 5개 ☆☆☆☆☆
-		$("p#star_rv_score .rv_score").on("click",function(e){
-
-			e.preventDefault();
-			
-			//$(this) : 클릭한 a태그
-			$(this).parent().children().removeClass("on");
-			$(this).addClass("on").prevAll("a").addClass("on");
-
-		})
-
-		//상풍평 목록 불러오는 작업. (이벤트사용없이 직접 호출)
-		let reviewPage = 1; // 목록에서 첫번째 페이지를 의미
-		let url = "/user/review/list/" + ${productVO.pro_num} + "/" + reviewPage;
-
-		getReviewInfo(url);
+      $("p#star_rv_score a.rv_score").on("click", function(e){
+        e.preventDefault();
+        // $(this) : 클릭한 a태그
+        $(this).parent().children().removeClass("on");
+        $(this).addClass("on").prevAll("a").addClass("on");
 
 
-		function getReviewInfo(url){
-			$.getJSON(url, function(data){ //스프링에서 받아오는 데이터가 data에 들어있음
+      });
 
-				//review_list
-				printReviewList(data.list, $("#review_list"), $("#reviewTemplate"));
+      // 상품평 목록 불러오는 작업. (이벤트 사용 안하고, 직접 호출)
+      let reviewPage = 1; // 목록에서 1번째 페이지를 의미.
+      // 	@GetMapping("/list/{pro_num}/{page}")
+      let url = "/user/review/list/" + ${productVO.pro_num } + "/" + reviewPage;
 
-			});
-		}
+      getReviewInfo(url);
+      
+      function getReviewInfo(url) {
+        $.getJSON(url, function(data) {
+
+          // console.log("상품후기", data.list[0].rew_content);
+          // console.log("페이징정보", data.pageMaker.total);
+          // review_list
+
+          printReviewList(data.list, $("#review_list"), $("#reviewTemplate"))
+
+          // review_paging
+          printPaging(data.pageMaker, $("#review_paging"));
+
+        });
+      }
 
 		//리뷰작업함수
 		let printReviewList = function(reviewData, target, template){
@@ -297,10 +311,38 @@
 			let reviewHtml = templateObj(reviewData);
 			
 			//상품후기목록 위치를 참조하여, 추가
-			$("#review_list").children().remove();
+			target.children().remove();
 			target.append(reviewHtml);
 
 			//상품후기 목록 위치를 참조하여, 추가
+		}
+
+		//2)페이징기능 작업 함수
+		let printPaging = function(pageMaker, target){
+			
+			let pagingStr = '<nav id="navigation" aria-label="Page navigation example">';			
+			pagingStr += '<ul class="pagination">';
+
+			//이전표시 여부
+			if(pageMaker.prev){
+				pagingStr += '<li class="page-item"><a class="page-link" href="' + (pageMaker.startPage -1) +'">Prev</a></li>';
+			}
+
+			//페이지 번호 출력
+			for(let i=pageMaker.startPage; i<=pageMaker.endPage; i++){
+				let className = pageMaker.cri.pageNum == i ? 'active' : '';				
+				pagingStr += '<li class="page-item ' + className + '"><a class="page-link" href="' + i + '">' + i + '</a></li>';
+				
+			}
+			//다음표시 여부
+	        if(pageMaker.next) {
+	            pagingStr += '<li class="page-item"><a class="page-link" href="' + (pageMaker.startpage +1) + '">[next]</a></li>';
+	          }
+	          pagingStr += '</ul>';
+	          pagingStr += '</nav>';
+
+	          target.children().remove(); 
+	          target.append(pagingStr);
 		}
 
 		//사용자 정의 Helper (핸들바의 함수 정의)
@@ -343,8 +385,144 @@
 
 		});
 
+		//상품후기 수정/삭제 버튼 표시
+		Handlebars.registerHelper("authControlView", function(mbsp_id, rew_num, rew_score){
 
-		//페이징작업함수
+			let str = "";
+			let login_id = "${sessionScope.loginStatus.mbsp_id}";
+
+			//로그인 한 사용자와 상품후기 등록 사용자 동일 여부
+			if(login_id == mbsp_id){
+				str += '<button type="button" name="btn_review_edit" class="btn btn-info" data-rew_score="' +rew_score + '">수정</button>'
+				str += ' <button type="button" name="btn_review_del" class="btn btn-danger" data-rew_num="' +rew_num + '">삭제</button>'
+
+				console.log(str);
+
+				//출력내용이 태그일 때 사용.
+				return new Handlebars.SafeString(str);
+			}
+
+		});
+
+		//상품후기 수정버튼 클릭 : 상품후기 수정폼
+		$("div#review_list").on("click", "button[name='btn_review_edit']",function() {
+			/*
+			console.log("번호 : ", $(this).parent().parent().find(".rew_num").text());
+			console.log("내용 : ", $(this).parent().parent().find(".rew_content").text());
+			console.log("평점 : ", $(this).parent().parent().find(".rew_score").text());
+			console.log("날짜 : ", $(this).parent().parent().find(".rew_regdate").text());
+			*/
+
+			//평점. 선택자 5개
+			let rew_score = $(this).data("rew_score");						
+			$("#star_rv_score a.rv_score").each(function(index, item){
+
+				if(index < rew_score){
+					$(item).addClass("on");
+				}else{
+					$(item).removeClass("on");
+				}
+
+				
+					
+
+			});
+			
+			//내용
+			$("#rew_content").text($(this).parent().parent().find(".rew_content").text());
+			$("#rew_num").text($(this).parent().parent().find(".rew_num").text());
+			$("#rew_regdate").text($(this).parent().parent().find(".rew_regdate").text());
+						
+			
+			$("#btn_review_save").hide();
+			$("#btn_review_modify").show();
+			//상품후기 수정버튼에 후기 번호를 data-rew_num 속성으로 저장
+			//$("#btn_review_modify").data("rew_num", $(this).parent().parent().find(".rew_num").text());
+			//modal()메서드는 부트스트랩 메서드
+			$('#review_modal').modal('show');
+
+			
+
+		});
+
+		//상품후기 수정하기
+		$("#btn_review_modify").on("click", function(){
+
+			let rew_num = $("#rew_num").text();
+			let rew_content = $("#rew_content").val(); //textarea 태그일경우 val()로 값 호출
+
+			console.log("rew_content : ", rew_content);
+			//평점
+			let rew_score = 0;
+			$("p#star_rv_score a.rv_score").each(function(index,item){
+
+				if($(this).attr("class") == "rv_score on"){
+					rew_score += 1;
+				}
+
+			});
+
+			let review_data = {rew_num : rew_num, rew_content : rew_content, rew_score : rew_score};
+
+			$.ajax({
+				url : '/user/review/modify',
+				headers : {
+					"Content-Type" : "application/json", "X-HTTP-Method-Override" : "PUT"
+				},
+				type : 'put',
+				data : JSON.stringify(review_data), //데이터포맷 object -> json으로 전환
+				dataType : 'text',
+				success : function(result)	{
+					if(result=='success'){
+						alert("리뷰가 수정되었습니다.");
+						$('#review_modal').modal('hide'); //부트스트랩 4.6버전의 자바스크립트 명령어
+						//리뷰 목록 불러오기						
+						getReviewInfo(url);
+					}
+				}
+			});
+			
+
+		});
+		
+		//상품후기 삭제버튼 클릭
+		$("div#review_list").on("click", "button[name='btn_review_del']",function() {
+		  
+		  if(!confirm("리뷰를 삭제하겠습니까?")) return;
+		  
+		  let rew_num = $(this).data("rew_num");
+		
+		  $.ajax({
+		    url : '/user/review/delete/' + rew_num,
+		    headers: {
+		      "Content-Type" : "application/json", "X-HTTP-Method-Override" : "DELETE"
+		    },
+		    type : 'delete',
+		    dataType: 'text',
+		    success : function(result) {
+		      if(result == 'success') {
+		        alert("상품평이 삭제됨");
+		       
+		        url = "/user/review/list/" + ${productVO.pro_num } + "/" + reviewPage;
+		        getReviewInfo(url);
+		      }
+		    }
+		  });
+		});
+
+		//페이징번호 클릭
+		$("div#review_paging").on("click", "nav#navigation ul a", function(e){
+
+			e.preventDefault();
+			//console.log("페이지번호");
+
+			reviewPage = $(this).attr("href"); //상품후기 페이지 번호 클릭
+
+			url = "/user/review/list/" + ${productVO.pro_num } + "/" + reviewPage;
+
+			getReviewInfo(url); // 스프링에서 상품후기, 페이지번호 데이터 가져오는 함수.
+
+		});
 
 		//리뷰 저장
 		$("#btn_review_save").on("click", function(){
@@ -408,7 +586,8 @@
 	  <div class="modal-dialog">
 		<div class="modal-content">
 		  <div class="modal-header">
-			<h5 class="modal-title" id="exampleModalLabel">상품후기</h5>
+			<!-- <h5 class="modal-title" id="exampleModalLabel">상품후기</h5> -->
+			<b>리뷰</b> <span id="rew_num"></span> <span id="rew_regdate"></span>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			  <span aria-hidden="true">&times;</span>
 			</button>
@@ -417,6 +596,7 @@
 			<form>
 			  <div class="form-group">
 				<label for="recipient-name" class="col-form-label">별점</label>
+				
 				<p id="star_rv_score">
 					<a class="rv_score" href="#">☆</a>
 					<a class="rv_score" href="#">☆</a>
@@ -434,6 +614,7 @@
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 			<button type="button" id="btn_review_save" class="btn btn-primary" data-pro_num="${productVO.pro_num }">상품후기저장</button>
+			<button type="button" id="btn_review_modify" class="btn btn-primary">상품후기수정</button>
 		  </div>
 		</div>
 	  </div>
