@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.docmall.mapper.AdOrderMapper">
+
+
+	<!-- 공통된 sql구문작업 : 검색조건 -->
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
+			<foreach collection="typeArr" item="type">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'C'.toString()">
+							ord_code like '%' || #{keyword} || '%'
+						</when>
+						<when test="type == 'N'.toString()">
+							ord_name like '%' || #{keyword} || '%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	
+	</sql>
+	
+	
+	<!--  CDATA 섹션 -->
+	<select id="order_list" resultType="com.docmall.domain.OrderVO" parameterType="com.docmall.dto.Criteria">
+		<![CDATA[
+		select 
+    		ord_code, mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, payment_status
+		from 
+		    (
+		    select /*+INDEX_DESC(order_tbl PK_ORDER_TBL) */
+		        rownum rn, ord_code, mbsp_id, ord_name, ord_zipcode, ord_addr_basic, ord_addr_detail, ord_tel, ord_price, ord_regdate, ord_status, payment_status
+		    from 
+		        order_tbl
+		    where 
+		    ]]>
+		    
+		    <include refid="criteria"></include>
+		    
+		    <![CDATA[
+		        rownum <= #{pageNum} * #{amount}
+		    )
+		where 
+		    rn > (#{pageNum} -1) * #{amount}
+		]]>
+	</select>
+	
+	<select id="getTotalCount" resultType="int">
+		select count(*) from order_tbl where
+		
+		<include refid="criteria"></include>
+		
+		ord_code > 0
+	</select>          
+	
+</mapper>
